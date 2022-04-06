@@ -1,0 +1,26 @@
+<!-- This pulls Uppy from our CDN. Alternatively use `npm i @uppy/robodog --save` -->
+<!-- if you want smaller self-hosted bundles and/or to use modern JavaScript -->
+<link href="//releases.transloadit.com/uppy/robodog/v2.0.1/robodog.min.css" rel="stylesheet">
+<script src="//releases.transloadit.com/uppy/robodog/v2.0.1/robodog.min.js"></script>
+<button id="browse">Select Files</button>
+<script>
+  document.getElementById('browse').addEventListener('click', function () {
+    var uppy = window.Robodog.pick({
+      providers: [ 'instagram', 'url', 'webcam', 'dropbox', 'google-drive', 'facebook', 'onedrive' ],
+      waitForEncoding: true,
+      alwaysRunAssembly: true, // <-- Since these Instructions do not require uploads
+      params: {
+        // To avoid tampering, use Signature Authentication
+        auth: { key: 'b1f6552c41564acc807bc6e2dcf1c772' },
+        template_id: '14f0617080ac4e7ab1772ac2aa5885e8'
+      }
+    }).then(function (bundle) {
+      // Due to `waitForEncoding: true` this is fired after encoding is done.
+      // Alternatively, set `waitForEncoding` to `false` and provide a `notify_url`
+      // for Async Mode where your back-end receives the encoding results
+      // so that your user can be on their way as soon as the upload completes.
+      console.log(bundle.transloadit) // Array of Assembly Statuses
+      console.log(bundle.results)     // Array of all encoding results
+    }).catch(console.error)
+  })
+</script>
