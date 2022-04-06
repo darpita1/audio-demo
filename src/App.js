@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import RecordingAPIDemo from 'RecordingAPIDemo';
+import RecordingAPIDemo from './RecordingAPIDemo.js';
 
 function App() {
   return (
