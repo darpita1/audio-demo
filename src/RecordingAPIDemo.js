@@ -11,7 +11,7 @@ export default function RecordingAPIDemo() {
         var recorder; 						//MediaRecorder object
         var chunks = [];					//Array of chunks of audio data from the browser
         var extension;
-        
+
         var recordButton;
         var stopButton;
         var pauseButton;
@@ -30,8 +30,12 @@ export default function RecordingAPIDemo() {
          }, { once: true });
 
     
-        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) { extension="webm"; }
-        else{ extension="ogg" }
+        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) { 
+            extension="webm"; 
+        }
+        else{ 
+            extension="ogg" 
+        }
     
     
         function startRecording() {
