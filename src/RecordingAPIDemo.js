@@ -7,10 +7,11 @@ export default function RecordingAPIDemo() {
         //webkitURL is deprecated but nevertheless
         URL = window.URL || window.webkitURL;
 
-        var gumStream; 						//stream from getUserMedia()
+        var mediaStream; 					//stream from getUserMedia()
         var recorder; 						//MediaRecorder object
         var chunks = [];					//Array of chunks of audio data from the browser
         var extension;
+        
         var recordButton;
         var stopButton;
         var pauseButton;
@@ -35,14 +36,12 @@ export default function RecordingAPIDemo() {
     
         function startRecording() {
             /*
-                Simple constraints object, for more advanced audio features see
-                https://addpipe.com/blog/audio-constraints-getusermedia/
+                Simple constraints object
             */
-            
             var constraints = {audio: true}
     
             /*
-                Disable the record button until we get a success or fail from getUserMedia() 
+                Set starting disabled parameters for 3 buttons 
             */
     
             recordButton.disabled = true;
@@ -55,8 +54,7 @@ export default function RecordingAPIDemo() {
             */
     
             navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-                /*  assign to gumStream for later use  */
-                gumStream = stream;
+                mediaStream = stream;
     
                 var options = {
                 audioBitsPerSecond :  256000,
@@ -79,7 +77,7 @@ export default function RecordingAPIDemo() {
                     chunks.push(e.data);
                     // if recorder is 'inactive' then recording has finished
                     if (recorder.state == 'inactive') {
-                    // convert stream data chunks to a 'webm' audio format as a blob
+                    // convert stream data chunks to a 'webm' audio format as a blob (a file-like object of immutable, raw data)
                     const blob = new Blob(chunks, { type: 'audio/'+extension, bitsPerSecond:128000});
                     createDownloadLink(blob)
                     }
@@ -116,7 +114,7 @@ export default function RecordingAPIDemo() {
                recordButton.innerHTML = "Restart Recording!";
             }
     
-            //disable the stop button, enable the record too allow for new recordings
+            //disable the stop and pause button, enable the record buttons
             stopButton.disabled = true;
             recordButton.disabled = false;
             pauseButton.disabled = true;
@@ -128,7 +126,7 @@ export default function RecordingAPIDemo() {
             recorder.stop();
     
             //stop microphone access
-            gumStream.getAudioTracks()[0].stop();
+            mediaStream.getAudioTracks()[0].stop();
             
         }
     
