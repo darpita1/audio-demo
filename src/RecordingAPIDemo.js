@@ -3,9 +3,10 @@ import "./RecordingAPIDemo.css";
 
 export default function RecordingAPIDemo() {
 
+
         //webkitURL is deprecated but nevertheless
         URL = window.URL || window.webkitURL;
-   
+
         var gumStream; 						//stream from getUserMedia()
         var recorder; 						//MediaRecorder object
         var chunks = [];					//Array of chunks of audio data from the browser
@@ -14,38 +15,25 @@ export default function RecordingAPIDemo() {
         var stopButton;
         var pauseButton;
         let countRecordings = 0;
-    
+
+
         window.addEventListener('DOMContentLoaded', function loader() {
            recordButton = document.getElementById("recordButton");
            stopButton = document.getElementById("stopButton");
            pauseButton = document.getElementById("pauseButton");
+
            //add events to those 2 buttons
            recordButton.addEventListener("click", startRecording);
            stopButton.addEventListener("click", stopRecording);
            pauseButton.addEventListener("click", pauseRecording);
          }, { once: true });
-        
+
     
-    
-        // true on chrome, false on firefox
-        console.log("audio/webm:"+MediaRecorder.isTypeSupported('audio/webm;codecs=opus'));
-        // false on chrome, true on firefox
-        console.log("audio/ogg:"+MediaRecorder.isTypeSupported('audio/ogg;codecs=opus'));
-    
-        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')){
-            extension="webm";
-        }else{
-            extension="ogg"
-        }
+        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) { extension="webm"; }
+        else{ extension="ogg" }
     
     
         function startRecording() {
-            if (countRecordings > 0) {
-                // popup code (optional for demo)
-                // delete all the recordings in the li
-            }
-            console.log("recordButton clicked");
-    
             /*
                 Simple constraints object, for more advanced audio features see
                 https://addpipe.com/blog/audio-constraints-getusermedia/
@@ -67,8 +55,6 @@ export default function RecordingAPIDemo() {
             */
     
             navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-                console.log("getUserMedia() success, stream created, initializing MediaRecorder");
-    
                 /*  assign to gumStream for later use  */
                 gumStream = stream;
     
@@ -89,11 +75,6 @@ export default function RecordingAPIDemo() {
     
                 //when data becomes available add it to our attay of audio data
                 recorder.ondataavailable = function(e){
-                    console.log("recorder.ondataavailable:" + e.data);
-                    
-                    console.log ("recorder.audioBitsPerSecond:"+recorder.audioBitsPerSecond)
-                    console.log ("recorder.videoBitsPerSecond:"+recorder.videoBitsPerSecond)
-                    console.log ("recorder.bitsPerSecond:"+recorder.bitsPerSecond)
                     // add stream data to chunks
                     chunks.push(e.data);
                     // if recorder is 'inactive' then recording has finished
@@ -104,15 +85,10 @@ export default function RecordingAPIDemo() {
                     }
                 };
     
-                recorder.onerror = function(e){
-                    console.log(e.error);
-                }
-    
                 //start recording using 1 second chunks
                 //Chrome and Firefox will record one long chunk if you do not specify the chunck length
                 recorder.start(1000);
     
-                //recorder.start();
             }).catch(function(err) {
                 //enable the record button if getUserMedia() fails
                 recordButton.disabled = false;
@@ -122,7 +98,6 @@ export default function RecordingAPIDemo() {
         }
     
         function pauseRecording(){
-            console.log("pauseButton clicked recorder.state=",recorder.state );
             if (recorder.state=="recording"){
                 //pause
                 recorder.pause();
@@ -136,7 +111,6 @@ export default function RecordingAPIDemo() {
         }
     
         function stopRecording() {
-            console.log("stopButton clicked");
             countRecordings++;
             if (countRecordings != 0) {
                recordButton.innerHTML = "Restart Recording!";
@@ -183,11 +157,9 @@ export default function RecordingAPIDemo() {
             recordingsList.appendChild(li);
         }
    
-   
+
        return (
            <Container>
-               {/* <link href="//releases.transloadit.com/uppy/robodog/v2.5.1/robodog.min.css" rel="stylesheet"/>
-               <script src="//releases.transloadit.com/uppy/robodog/v2.5.1/robodog.min.js"></script> */}
                <div>
                    <div id="controls">
                        <button id="recordButton">Record</button>
@@ -200,5 +172,6 @@ export default function RecordingAPIDemo() {
                </div>
            </Container>
        );
+
+
    }
-   
